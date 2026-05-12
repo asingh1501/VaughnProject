@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Sprint - Vaughn Elementary</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell" aria-live="polite">
+      <section id="start-screen" class="screen active">
+        <div class="hero-badge" aria-hidden="true">⭐</div>
+        <h1>Math Sprint</h1>
+        <p class="subtitle">Pick a mode and solve as many problems as you can in 60 seconds.</p>
+
+        <div class="mode-grid" aria-label="Choose a math mode">
+          <button class="mode-button addition" data-mode="addition">
+            <span aria-hidden="true">➕</span>
+            Addition
+          </button>
+          <button class="mode-button subtraction" data-mode="subtraction">
+            <span aria-hidden="true">➖</span>
+            Subtraction
+          </button>
+          <button class="mode-button multiplication" data-mode="multiplication">
+            <span aria-hidden="true">✖️</span>
+            Multiplication
+          </button>
+          <button class="mode-button division" data-mode="division">
+            <span aria-hidden="true">➗</span>
+            Division
+          </button>
+          <button class="mode-button mixed" data-mode="mixed">
+            <span aria-hidden="true">🎲</span>
+            Mixed Mode
+          </button>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen">
+        <header class="game-header">
+          <div class="stat-card">
+            <span class="stat-label">Mode</span>
+            <strong id="mode-label">Addition</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Score</span>
+            <strong id="score-label">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Time</span>
+            <strong><span id="time-label">60</span>s</strong>
+          </div>
+        </header>
+
+        <div class="timer-track" aria-label="Timer progress">
+          <div id="timer-bar" class="timer-bar"></div>
+        </div>
+
+        <div class="problem-card">
+          <p id="encouragement" class="encouragement">You got this!</p>
+          <div id="problem-text" class="problem-text">4 + 5 = ?</div>
+
+          <form id="answer-form" class="answer-form">
+            <label class="visually-hidden" for="answer-input">Answer</label>
+            <input
+              id="answer-input"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="?"
+              aria-describedby="feedback"
+            />
+            <button class="submit-button" type="submit">Submit</button>
+          </form>
+
+          <div class="keypad" aria-label="Number keypad">
+            <button type="button" data-key="1">1</button>
+            <button type="button" data-key="2">2</button>
+            <button type="button" data-key="3">3</button>
+            <button type="button" data-key="4">4</button>
+            <button type="button" data-key="5">5</button>
+            <button type="button" data-key="6">6</button>
+            <button type="button" data-key="7">7</button>
+            <button type="button" data-key="8">8</button>
+            <button type="button" data-key="9">9</button>
+            <button type="button" data-key="clear">Clear</button>
+            <button type="button" data-key="0">0</button>
+            <button type="button" data-key="back">⌫</button>
+          </div>
+
+          <p id="feedback" class="feedback" role="status"></p>
+        </div>
+      </section>
+
+      <section id="end-screen" class="screen">
+        <div class="hero-badge" aria-hidden="true">🏆</div>
+        <h2>Time is up!</h2>
+        <p id="final-message" class="subtitle">Great work today.</p>
+        <div class="final-score">
+          <span>Final Score</span>
+          <strong id="final-score-label">0</strong>
+        </div>
+        <div class="results-grid" aria-label="Game results">
+          <div class="result-card">
+            <span>Answered</span>
+            <strong id="answered-label">0</strong>
+          </div>
+          <div class="result-card">
+            <span>Correct</span>
+            <strong id="correct-label">0</strong>
+          </div>
+          <div class="result-card">
+            <span>Accuracy</span>
+            <strong id="accuracy-label">0%</strong>
+          </div>
+          <div class="result-card">
+            <span>Best Score</span>
+            <strong id="best-score-label">0</strong>
+          </div>
+        </div>
+        <section class="missed-review" aria-labelledby="missed-title">
+          <h3 id="missed-title">Missed Problems</h3>
+          <p id="missed-empty" class="missed-empty">No missed problems this round.</p>
+          <ul id="missed-list" class="missed-list"></ul>
+        </section>
+        <div class="end-actions">
+          <button id="play-again-button" class="primary-action" type="button">Play Again</button>
+          <button id="back-button" class="secondary-action" type="button">Choose Mode</button>
+          <button id="print-button" class="print-action" type="button">Print Results</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
