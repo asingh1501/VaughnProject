@@ -6,6 +6,7 @@ A bright, classroom-friendly math practice game for 2nd graders. Students choose
 
 - Five modes: Addition, Subtraction, Multiplication, Division, and Mixed Mode
 - Multiplication and division use simple story-style prompts to show groups and sharing
+- Visual dot models show each multiplication group or equal division share
 - 60-second timer with a progress bar
 - Score, total answered, correct answers, and accuracy tracking
 - Missed-problem review at the end of each round

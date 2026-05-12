@@ -17,10 +17,6 @@ const messages = [
   "Super focus!",
 ];
 
-const multiplicationItems = ["apples", "stars", "blocks", "stickers", "pencils", "crayons"];
-const divisionItems = ["apples", "stickers", "pencils", "cards", "blocks", "crayons"];
-const people = ["students", "friends", "teams", "tables", "groups", "classmates"];
-
 const screens = {
   start: document.querySelector("#start-screen"),
   game: document.querySelector("#game-screen"),
@@ -34,6 +30,7 @@ const timeLabel = document.querySelector("#time-label");
 const timerBar = document.querySelector("#timer-bar");
 const encouragement = document.querySelector("#encouragement");
 const problemText = document.querySelector("#problem-text");
+const visualModel = document.querySelector("#visual-model");
 const answerForm = document.querySelector("#answer-form");
 const answerInput = document.querySelector("#answer-input");
 const feedback = document.querySelector("#feedback");
@@ -73,10 +70,6 @@ function randomMessage() {
   return messages[randomInt(0, messages.length - 1)];
 }
 
-function randomFrom(list) {
-  return list[randomInt(0, list.length - 1)];
-}
-
 // Problem generators follow the requested 2nd-grade difficulty rules.
 function createProblem(mode) {
   const activeMode =
@@ -113,38 +106,92 @@ function createProblem(mode) {
   }
 
   if (activeMode === "multiplication") {
-    const left = randomInt(0, 10);
+    const left = randomInt(1, 10);
     const right = randomInt(0, 10);
-    const item = randomFrom(multiplicationItems);
     return {
       left,
       right,
       symbol: "x",
       answer: left * right,
-      prompt: `${left} groups of ${right} ${item}. How many ${item} in all?`,
+      prompt: `${left} groups of ${right}`,
       isStory: true,
+      visualType: "multiplication",
     };
   }
 
   const divisor = randomInt(1, 10);
   const answer = randomInt(1, 10);
   const total = divisor * answer;
-  const item = randomFrom(divisionItems);
-  const group = randomFrom(people);
   return {
     left: total,
     right: divisor,
     symbol: "÷",
     answer,
-    prompt: `${total} ${item} split equally among ${divisor} ${group}. How many does each get?`,
+    prompt: `${total} split into ${divisor} groups`,
     isStory: true,
+    visualType: "division",
   };
+}
+
+function createDots(count) {
+  const dots = document.createElement("div");
+  dots.className = "dots";
+
+  for (let index = 0; index < count; index += 1) {
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dots.append(dot);
+  }
+
+  return dots;
+}
+
+function createDotGroup(labelText, dotCount, extraClass = "") {
+  const group = document.createElement("div");
+  const label = document.createElement("span");
+
+  group.className = `dot-group ${extraClass}`.trim();
+  label.className = "dot-group-label";
+  label.textContent = labelText;
+
+  group.append(label, createDots(dotCount));
+  return group;
+}
+
+function renderVisualModel(problem) {
+  visualModel.innerHTML = "";
+  visualModel.classList.toggle("active", Boolean(problem.visualType));
+
+  if (!problem.visualType) {
+    return;
+  }
+
+  const title = document.createElement("p");
+  const grid = document.createElement("div");
+
+  title.className = "visual-title";
+  grid.className = "group-grid";
+
+  if (problem.visualType === "multiplication") {
+    title.textContent = `${problem.left} groups, ${problem.right} in each group`;
+    for (let index = 1; index <= problem.left; index += 1) {
+      grid.append(createDotGroup(`Group ${index}: ${problem.right}`, problem.right));
+    }
+  } else {
+    title.textContent = `${problem.left} shared into ${problem.right} equal groups`;
+    for (let index = 1; index <= problem.right; index += 1) {
+      grid.append(createDotGroup(`Share ${index}: ?`, problem.answer, "share"));
+    }
+  }
+
+  visualModel.append(title, grid);
 }
 
 function displayProblem() {
   currentProblem = createProblem(selectedMode);
   problemText.textContent = currentProblem.prompt;
   problemText.classList.toggle("story-problem", currentProblem.isStory);
+  renderVisualModel(currentProblem);
   encouragement.textContent = randomMessage();
   answerInput.value = "";
   answerInput.focus();
