@@ -237,6 +237,14 @@ h2 {
   letter-spacing: 0;
 }
 
+.problem-text.story-problem {
+  max-width: 650px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: clamp(1.9rem, 5vw, 3.25rem);
+  line-height: 1.14;
+}
+
 .answer-form {
   display: grid;
   grid-template-columns: 1fr auto;

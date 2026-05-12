@@ -17,6 +17,10 @@ const messages = [
   "Super focus!",
 ];
 
+const multiplicationItems = ["apples", "stars", "blocks", "stickers", "pencils", "crayons"];
+const divisionItems = ["apples", "stickers", "pencils", "cards", "blocks", "crayons"];
+const people = ["students", "friends", "teams", "tables", "groups", "classmates"];
+
 const screens = {
   start: document.querySelector("#start-screen"),
   game: document.querySelector("#game-screen"),
@@ -69,6 +73,10 @@ function randomMessage() {
   return messages[randomInt(0, messages.length - 1)];
 }
 
+function randomFrom(list) {
+  return list[randomInt(0, list.length - 1)];
+}
+
 // Problem generators follow the requested 2nd-grade difficulty rules.
 function createProblem(mode) {
   const activeMode =
@@ -79,7 +87,14 @@ function createProblem(mode) {
   if (activeMode === "addition") {
     const left = randomInt(0, 20);
     const right = randomInt(0, 20);
-    return { left, right, symbol: "+", answer: left + right };
+    return {
+      left,
+      right,
+      symbol: "+",
+      answer: left + right,
+      prompt: `${left} + ${right} = ?`,
+      isStory: false,
+    };
   }
 
   if (activeMode === "subtraction") {
@@ -87,23 +102,49 @@ function createProblem(mode) {
     const second = randomInt(0, 20);
     const left = Math.max(first, second);
     const right = Math.min(first, second);
-    return { left, right, symbol: "-", answer: left - right };
+    return {
+      left,
+      right,
+      symbol: "-",
+      answer: left - right,
+      prompt: `${left} - ${right} = ?`,
+      isStory: false,
+    };
   }
 
   if (activeMode === "multiplication") {
     const left = randomInt(0, 10);
     const right = randomInt(0, 10);
-    return { left, right, symbol: "x", answer: left * right };
+    const item = randomFrom(multiplicationItems);
+    return {
+      left,
+      right,
+      symbol: "x",
+      answer: left * right,
+      prompt: `${left} groups of ${right} ${item}. How many ${item} in all?`,
+      isStory: true,
+    };
   }
 
   const divisor = randomInt(1, 10);
   const answer = randomInt(1, 10);
-  return { left: divisor * answer, right: divisor, symbol: "÷", answer };
+  const total = divisor * answer;
+  const item = randomFrom(divisionItems);
+  const group = randomFrom(people);
+  return {
+    left: total,
+    right: divisor,
+    symbol: "÷",
+    answer,
+    prompt: `${total} ${item} split equally among ${divisor} ${group}. How many does each get?`,
+    isStory: true,
+  };
 }
 
 function displayProblem() {
   currentProblem = createProblem(selectedMode);
-  problemText.textContent = `${currentProblem.left} ${currentProblem.symbol} ${currentProblem.right} = ?`;
+  problemText.textContent = currentProblem.prompt;
+  problemText.classList.toggle("story-problem", currentProblem.isStory);
   encouragement.textContent = randomMessage();
   answerInput.value = "";
   answerInput.focus();
@@ -139,7 +180,7 @@ function renderMissedProblems() {
     const question = document.createElement("strong");
     const answer = document.createElement("span");
 
-    question.textContent = `${problem.left} ${problem.symbol} ${problem.right} = ${problem.correctAnswer}`;
+    question.textContent = `${problem.prompt} Answer: ${problem.correctAnswer}`;
     answer.textContent = `Your answer: ${problem.userAnswer}`;
 
     listItem.append(question, answer);
@@ -215,6 +256,7 @@ function checkAnswer(event) {
       left: currentProblem.left,
       right: currentProblem.right,
       symbol: currentProblem.symbol,
+      prompt: currentProblem.prompt,
       userAnswer: answerInput.value,
       correctAnswer: currentProblem.answer,
     });
